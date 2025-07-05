@@ -21,3 +21,11 @@ variable "vpc_public_subnets" {
 variable "vpc_database_subnets" {
   type = list(string)
 }
+
+variable "ecs_name" {
+  type = string
+}
+
+variable "ecs_ec2_instance_type" {
+  type = string
+}

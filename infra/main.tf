@@ -12,3 +12,12 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
 }
+
+module "ecs_cluster" {
+  source = "./modules/ecs_cluster"
+
+  name          = var.ecs_name
+  instance_type = var.ecs_ec2_instance_type
+  vpc_id        = module.vpc.vpc_id
+  subnets       = module.vpc.private_subnets
+}
