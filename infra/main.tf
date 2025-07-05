@@ -16,8 +16,20 @@ module "vpc" {
 module "ecs_cluster" {
   source = "./modules/ecs_cluster"
 
-  name          = var.ecs_name
+  name          = var.app_name
   instance_type = var.ecs_ec2_instance_type
   vpc_id        = module.vpc.vpc_id
   subnets       = module.vpc.private_subnets
+}
+
+module "database" {
+  source = "./modules/database"
+
+  name              = var.app_name
+  instance_class    = var.rds_instance_class
+  mysql_version     = var.rds_mysql_version
+  allocated_storage = var.rds_allocated_storage
+  username          = var.app_name
+  vpc_id            = module.vpc.vpc_id
+  subnet_group_name = module.vpc.database_subnet_group_name
 }

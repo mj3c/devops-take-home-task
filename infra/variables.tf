@@ -22,10 +22,22 @@ variable "vpc_database_subnets" {
   type = list(string)
 }
 
-variable "ecs_name" {
+variable "app_name" {
   type = string
 }
 
 variable "ecs_ec2_instance_type" {
+  type = string
+}
+
+variable "rds_instance_class" {
+  type = string
+}
+
+variable "rds_allocated_storage" {
+  type = number
+}
+
+variable "rds_mysql_version" {
   type = string
 }
