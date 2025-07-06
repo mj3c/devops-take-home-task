@@ -65,7 +65,43 @@ resource "aws_lb_listener" "https" {
 }
 
 resource "aws_acm_certificate" "https_self_signed" {
-  private_key       = file("${path.module}/certs/selfsigned.key")
-  certificate_body  = file("${path.module}/certs/selfsigned.crt")
+  private_key      = file("${path.module}/certs/selfsigned.key")
+  certificate_body = file("${path.module}/certs/selfsigned.crt")
 }
 
+resource "aws_lb_target_group" "this" {
+  for_each = var.targets
+  name     = each.value.name
+  port     = each.value.port
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+
+  health_check {
+    path                = "/"
+    protocol            = "HTTP"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200"
+  }
+
+  target_type = "instance"
+}
+
+resource "aws_lb_listener_rule" "this" {
+  for_each     = var.targets
+  listener_arn = aws_lb_listener.https.arn
+  priority     = each.value.priority
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.this[each.key].arn
+  }
+
+  condition {
+    path_pattern {
+      values = [each.value.path_pattern]
+    }
+  }
+}

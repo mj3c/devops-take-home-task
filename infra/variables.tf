@@ -41,3 +41,12 @@ variable "rds_allocated_storage" {
 variable "rds_mysql_version" {
   type = string
 }
+
+variable "alb_targets" {
+  type = map(object({
+    name         = string
+    port         = number
+    priority     = number
+    path_pattern = string
+  }))
+}

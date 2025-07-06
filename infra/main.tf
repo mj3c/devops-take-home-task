@@ -40,4 +40,14 @@ module "alb" {
   name    = var.app_name
   vpc_id  = module.vpc.vpc_id
   subnets = module.vpc.public_subnets
+  targets = var.alb_targets
+}
+
+module "demo-app" {
+  source = "./modules/app"
+
+  name                        = var.app_name
+  ecs_cluster_id              = module.ecs_cluster.id
+  ecs_task_execution_role_arn = module.ecs_cluster.ecs_task_execution_role_arn
+  lb_target_group_arn         = module.alb.target_groups[var.app_name].arn
 }
