@@ -33,3 +33,11 @@ module "database" {
   vpc_id            = module.vpc.vpc_id
   subnet_group_name = module.vpc.database_subnet_group_name
 }
+
+module "alb" {
+  source = "./modules/alb"
+
+  name    = var.app_name
+  vpc_id  = module.vpc.vpc_id
+  subnets = module.vpc.public_subnets
+}
