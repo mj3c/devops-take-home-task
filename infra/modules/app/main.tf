@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 resource "aws_ecr_repository" "app" {
   name = var.name
   image_scanning_configuration {
@@ -18,10 +20,18 @@ resource "aws_ecs_task_definition" "app" {
       portMappings = [
         {
           containerPort = 80
-          hostPort      = 0
+          hostPort      = 80
           protocol      = "tcp"
         }
       ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = "/ecs/${var.name}"
+          awslogs-region        = data.aws_region.current.region
+          awslogs-stream-prefix = "ecs"
+        }
+      }
     },
   ])
 }
@@ -66,4 +76,9 @@ resource "aws_security_group" "app" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_cloudwatch_log_group" "app" {
+  name              = "/ecs/${var.name}"
+  retention_in_days = 7
 }
