@@ -50,4 +50,7 @@ module "demo-app" {
   ecs_cluster_id              = module.ecs_cluster.id
   ecs_task_execution_role_arn = module.ecs_cluster.ecs_task_execution_role_arn
   lb_target_group_arn         = module.alb.target_groups[var.app_name].arn
+  subnets                     = module.vpc.private_subnets
+  vpc_id                      = module.vpc.vpc_id
+  allow_ingress_from_sgs      = [module.alb.sg_id]
 }

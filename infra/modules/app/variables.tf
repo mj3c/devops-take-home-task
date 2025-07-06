@@ -17,3 +17,19 @@ variable "lb_target_group_arn" {
   type        = string
   description = "The LB target group ARN to use for the ECS service"
 }
+
+variable "vpc_id" {
+  type        = string
+  description = "The VPC ID to use when creating the SG"
+}
+
+variable "subnets" {
+  type        = list(string)
+  description = "The subnets to use for the ECS task/service"
+}
+
+variable "allow_ingress_from_sgs" {
+  type        = list(string)
+  description = "List of SG IDs to allow ingress from"
+  default     = []
+}

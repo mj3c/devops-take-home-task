@@ -20,13 +20,17 @@ resource "aws_security_group" "rds" {
 }
 
 resource "aws_db_instance" "main" {
-  db_name           = "${var.name}-db"
+  identifier        = var.name
+  db_name           = replace("${var.name}-db", "-", "")
   engine            = "mysql"
   allocated_storage = var.allocated_storage
   engine_version    = var.mysql_version
   instance_class    = var.instance_class
-  username          = var.username
+  username          = replace(var.username, "-", "")
+  password          = var.password
 
   db_subnet_group_name   = var.subnet_group_name
   vpc_security_group_ids = [aws_security_group.rds.id]
+
+  skip_final_snapshot = true
 }

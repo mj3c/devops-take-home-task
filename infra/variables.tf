@@ -42,6 +42,10 @@ variable "rds_mysql_version" {
   type = string
 }
 
+variable "rds_mysql_password" {
+  type = string
+}
+
 variable "alb_targets" {
   type = map(object({
     name         = string

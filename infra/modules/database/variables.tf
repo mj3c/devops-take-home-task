@@ -23,6 +23,11 @@ variable "username" {
   description = "The MySQL username for the master user"
 }
 
+variable "password" {
+  type        = string
+  description = "The MySQL password for the master user (sensitive value, should be set as env var)"
+}
+
 variable "vpc_id" {
   type        = string
   description = "The VPC ID for the RDS instance's security group"

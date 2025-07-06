@@ -11,18 +11,12 @@ variable "instance_type" {
 variable "ebs_volume_size" {
   type        = number
   description = "The EBS volume size (in GB) for the ECS instances"
-  default     = 10
+  default     = 30
 }
 
 variable "vpc_id" {
   type        = string
   description = "The VPC ID to use for the ECS cluster"
-}
-
-variable "allow_ingress_from_sgs" {
-  type        = list(string)
-  description = "List of SG IDs to allow ingress from"
-  default     = []
 }
 
 variable "subnets" {

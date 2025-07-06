@@ -86,7 +86,7 @@ resource "aws_lb_target_group" "this" {
     matcher             = "200"
   }
 
-  target_type = "instance"
+  target_type = "ip"
 }
 
 resource "aws_lb_listener_rule" "this" {
