@@ -79,7 +79,7 @@ resource "aws_lb_target_group" "this" {
   health_check {
     path                = "/"
     protocol            = "HTTP"
-    interval            = 30
+    interval            = 10
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
@@ -87,6 +87,9 @@ resource "aws_lb_target_group" "this" {
   }
 
   target_type = "ip"
+
+  # Setting a short deregistration delay for quicker apply/destroy for demoing.
+  deregistration_delay = 10
 }
 
 resource "aws_lb_listener_rule" "this" {
