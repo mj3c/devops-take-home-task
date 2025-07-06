@@ -51,6 +51,8 @@ resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.main.arn
   port              = 443
   protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.https_self_signed.arn
 
   default_action {
     type = "fixed-response"
@@ -61,3 +63,9 @@ resource "aws_lb_listener" "https" {
     }
   }
 }
+
+resource "aws_acm_certificate" "https_self_signed" {
+  private_key       = file("${path.module}/certs/selfsigned.key")
+  certificate_body  = file("${path.module}/certs/selfsigned.crt")
+}
+

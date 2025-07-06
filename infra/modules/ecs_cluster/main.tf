@@ -11,23 +11,13 @@ data "aws_ami" "ecs_ami" {
 resource "aws_security_group" "ecs_instance" {
   name        = "${var.name}-instance"
   vpc_id      = var.vpc_id
-  description = "The main SG for the ECS instances that will allow traffic to ports 80/443"
+  description = "The main SG for the ECS instances that will allow traffic to port 80"
 
   dynamic "ingress" {
     for_each = var.allow_ingress_from_sgs
     content {
       from_port       = 80
       to_port         = 80
-      protocol        = "tcp"
-      security_groups = ingress.value
-    }
-  }
-
-  dynamic "ingress" {
-    for_each = var.allow_ingress_from_sgs
-    content {
-      from_port       = 443
-      to_port         = 443
       protocol        = "tcp"
       security_groups = ingress.value
     }
@@ -85,4 +75,45 @@ resource "aws_autoscaling_group" "ecs_asg" {
 
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = var.name
+}
+
+data "aws_iam_policy_document" "ecs_task" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["*"]
+  }
+}
+
+data "aws_iam_policy_document" "ecs_task_trust" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_policy" "ecs_task" {
+  name   = "CustomECSTaskExecutionPolicy"
+  policy = data.aws_iam_policy_document.ecs_task.json
+}
+
+resource "aws_iam_role" "ecs_task" {
+  name               = "CustomECSTaskExecutionRole"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_trust.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task" {
+  role       = aws_iam_role.ecs_task.name
+  policy_arn = aws_iam_policy.ecs_task.arn
 }

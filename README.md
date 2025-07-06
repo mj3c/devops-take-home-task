@@ -6,7 +6,11 @@
 
 These are notes I collected as I worked on this.
 
-1. I used the AWS Console / CLI to create some initial resources, such as an IAM user with admin privileges to avoid using the root user, the S3 bucket for terraform state, as well as the DynamoDB table for terraform state lock. These could also be done in terraform, but have to be setup in advance.
+1. I used the AWS Console / CLI to create some initial resources. These could also be done in terraform, but have to be setup in advance. These are:
+
+  1. IAM user with admin privileges to avoid using the root user
+  2. S3 bucket for terraform state + DynamoDB table for state lock
+  3. The self-signed certs for the ALB
 
 2. In a real-world scenario, I would separate this work in a few repositories, meaning the app, terraform modules, the actual terraform infra config... could all be in separate repos. This would allow for separating access control, tagging/versioning, etc... depending on requirements.
 
