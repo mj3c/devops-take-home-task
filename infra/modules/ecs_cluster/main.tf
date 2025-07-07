@@ -69,6 +69,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 # This is an equivalent of https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AmazonECSTaskExecutionRolePolicy.html
+# With the addition of SSM access and KMS for decryption
 data "aws_iam_policy_document" "ecs_task" {
   statement {
     effect = "Allow"
@@ -78,7 +79,10 @@ data "aws_iam_policy_document" "ecs_task" {
       "ecr:GetDownloadUrlForLayer",
       "ecr:BatchGetImage",
       "logs:CreateLogStream",
-      "logs:PutLogEvents"
+      "logs:PutLogEvents",
+      "ssm:GetParameter",
+      "ssm:GetParameters",
+      "kms:Decrypt"
     ]
     resources = ["*"]
   }

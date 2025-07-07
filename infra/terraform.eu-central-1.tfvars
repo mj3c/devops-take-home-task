@@ -18,6 +18,6 @@ alb_targets = {
     name         = "demo-app"
     port         = 80
     priority     = 100
-    path_pattern = "/"
+    path_pattern = "/*"
   }
 }

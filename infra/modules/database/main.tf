@@ -32,5 +32,6 @@ resource "aws_db_instance" "main" {
   db_subnet_group_name   = var.subnet_group_name
   vpc_security_group_ids = [aws_security_group.rds.id]
 
+  # Skipping final snapshot for quicker apply/destroy for demoing
   skip_final_snapshot = true
 }

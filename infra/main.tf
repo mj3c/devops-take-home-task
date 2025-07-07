@@ -25,13 +25,15 @@ module "ecs_cluster" {
 module "database" {
   source = "./modules/database"
 
-  name              = var.app_name
-  instance_class    = var.rds_instance_class
-  mysql_version     = var.rds_mysql_version
-  allocated_storage = var.rds_allocated_storage
-  username          = var.app_name
-  vpc_id            = module.vpc.vpc_id
-  subnet_group_name = module.vpc.database_subnet_group_name
+  name                   = var.app_name
+  instance_class         = var.rds_instance_class
+  mysql_version          = var.rds_mysql_version
+  allocated_storage      = var.rds_allocated_storage
+  username               = var.app_name
+  password               = var.rds_mysql_password
+  vpc_id                 = module.vpc.vpc_id
+  subnet_group_name      = module.vpc.database_subnet_group_name
+  allow_ingress_from_sgs = [module.demo-app.sg_id, module.alb.sg_id]
 }
 
 module "alb" {
@@ -53,4 +55,9 @@ module "demo-app" {
   subnets                     = module.vpc.private_subnets
   vpc_id                      = module.vpc.vpc_id
   allow_ingress_from_sgs      = [module.alb.sg_id]
+
+  db_host     = module.database.rds_address
+  db_name     = module.database.rds_db_name
+  db_user     = module.database.rds_mysql_user
+  db_password = var.rds_mysql_password
 }

@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "app" {
   container_definitions = jsonencode([
     {
       name      = var.name
-      image     = "nginx:latest"
+      image     = "wordpress:latest"
       memory    = 128
       essential = true
       portMappings = [
@@ -22,6 +22,26 @@ resource "aws_ecs_task_definition" "app" {
           containerPort = 80
           hostPort      = 80
           protocol      = "tcp"
+        }
+      ]
+      environment = [
+        {
+          name  = "WORDPRESS_DB_HOST"
+          value = var.db_host
+        },
+        {
+          name  = "WORDPRESS_DB_USER"
+          value = var.db_user
+        },
+        {
+          name  = "WORDPRESS_DB_NAME"
+          value = var.db_name
+        },
+      ]
+      secrets = [
+        {
+          name      = "WORDPRESS_DB_PASSWORD"
+          valueFrom = aws_ssm_parameter.db_password.arn
         }
       ]
       logConfiguration = {
@@ -81,4 +101,10 @@ resource "aws_security_group" "app" {
 resource "aws_cloudwatch_log_group" "app" {
   name              = "/ecs/${var.name}"
   retention_in_days = 7
+}
+
+resource "aws_ssm_parameter" "db_password" {
+  name  = "/${var.name}/db_password"
+  value = var.db_password
+  type  = "SecureString"
 }

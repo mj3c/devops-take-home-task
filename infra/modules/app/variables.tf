@@ -33,3 +33,23 @@ variable "allow_ingress_from_sgs" {
   description = "List of SG IDs to allow ingress from"
   default     = []
 }
+
+variable "db_host" {
+  type        = string
+  description = "The hostname of the database to connect to"
+}
+
+variable "db_name" {
+  type        = string
+  description = "The database name"
+}
+
+variable "db_user" {
+  type        = string
+  description = "The database username"
+}
+
+variable "db_password" {
+  type        = string
+  description = "The database password"
+}

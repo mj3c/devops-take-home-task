@@ -43,7 +43,8 @@ variable "rds_mysql_version" {
 }
 
 variable "rds_mysql_password" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "alb_targets" {
