@@ -34,7 +34,7 @@ jobs:
       - name: Build, Tag, and Push Docker image
         run: |
           cd demo-app
-          IMAGE_TAG=demo-app:$(date +%Y-%m-%d-%H-%M-%S)
+          IMAGE_TAG=$(date +%Y-%m-%d-%H-%M-%S)
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           
