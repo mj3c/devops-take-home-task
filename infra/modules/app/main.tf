@@ -1,12 +1,5 @@
 data "aws_region" "current" {}
 
-resource "aws_ecr_repository" "app" {
-  name = var.name
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
 resource "aws_ecs_task_definition" "app" {
   family             = var.name
   execution_role_arn = var.ecs_task_execution_role_arn
