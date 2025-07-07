@@ -11,8 +11,10 @@ These are notes I collected as I worked on this.
   1. IAM user with admin privileges to avoid using the root user
   2. S3 bucket for terraform state + DynamoDB table for state lock
   3. The self-signed certs for the ALB
+  4. The ECR repository (could also be done inside `infra/modules/demo-app`, but usually we want a single ECR repository even if deploying to multiple regions)
+  5. The IAM role to allow GitHub Actions to push to ECR and update ECS services.
 
-2. In a real-world scenario, I would separate this work in a few repositories, meaning the app, terraform modules, the actual terraform infra config... could all be in separate repos. This would allow for separating access control, tagging/versioning, etc... depending on requirements.
+2. In a real-world scenario, I would separate this work in a few repositories, meaning the `./demo-app`, terraform modules inside `./infra/modules`, the actual terraform infra config inside `./infra`, and the app version to deploy inside `./live` could all be in separate repos. This would allow for separating access control, tagging/versioning, etc... depending on requirements.
 
 3. I used a combination of publically available modules (like the VPC module) and custom-built modules (like `./infra/modules/ecs_cluster`) to demonstrate use of both.
 
