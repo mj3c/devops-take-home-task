@@ -1,0 +1,44 @@
+name: Build and Push to ECR
+
+on:
+  push:
+    paths:
+      - 'demo-app/**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      ECR_REGISTRY: $AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com
+      ECR_REPOSITORY: demo-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::$AWS_ACCOUNT_ID:role/CustomGithubActionsRole
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, Tag, and Push Docker image
+        run: |
+          cd demo-app
+          IMAGE_TAG=demo-app:$(date +%Y-%m-%d-%H-%M-%S)
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        id: build
+
+      - name: Commit image tag to live repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          echo "IMAGE_URI=${{ steps.build.outputs.image }}" > live/demo-app.version
+          git add live/demo-app.version
+          git commit -m "Update demo-app image to ${{ steps.build.outputs.image }}"
+          git push
