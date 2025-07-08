@@ -54,7 +54,7 @@ jobs:
           retention-days: 1
 
   apply:
-    name: Terraform Apply
+    name: Terraform Apply (${{ inputs.aws-region }})
     needs: plan
     runs-on: ubuntu-latest
     environment: production
