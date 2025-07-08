@@ -14,6 +14,6 @@ jobs:
 
     steps:
       - name: Call deploy-infra workflow for ${{ matrix.region }}
-        uses: .github/workflows/deploy-region.yml
+        uses: ./.github/workflows/deploy-region.yml
         with:
           aws-region: ${{ matrix.region }}
