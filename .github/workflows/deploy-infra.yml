@@ -6,7 +6,6 @@ permissions:
   contents: read # This is required for actions/checkout
 
 on:
-  # Allow triggering manually for easier testing
   workflow_dispatch:
 
 jobs:
