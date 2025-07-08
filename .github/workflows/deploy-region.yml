@@ -13,6 +13,12 @@ on:
       aws-region:
         required: true
         type: string
+  # Allow triggering manually for easier testing
+  workflow_dispatch:
+    inputs:
+      aws-region:
+        required: true
+        type: string
 
 jobs:
   plan:
