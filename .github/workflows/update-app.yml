@@ -54,4 +54,5 @@ jobs:
           aws ecs update-service \
             --cluster $CLUSTER_NAME \
             --service $SERVICE_NAME \
-            --task-definition ${{ steps.newtask.outputs.taskdef_arn }}
+            --task-definition ${{ steps.newtask.outputs.taskdef_arn }} \
+            --force-new-deployment
