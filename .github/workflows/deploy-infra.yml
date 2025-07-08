@@ -1,72 +1,19 @@
 name: Deploy Infrastructure
 
-# https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
-permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: read # This is required for actions/checkout
-
 on:
   # Allow triggering manually for easier testing
   workflow_dispatch:
 
 jobs:
-  plan:
-    name: Terraform Plan
+  deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        region:
+          - eu-central-1
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Call deploy-infra workflow for ${{ matrix.region }}
+        uses: .github/workflows/deploy-region.yml
         with:
-          aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::$AWS_ACCOUNT_ID:role/CustomGithubActionsRole
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        run: cd infra && terraform init
-
-      - name: Terraform Plan
-        run: cd infra && terraform plan -out=tfplan
-
-      - name: Upload Plan File
-        uses: actions/upload-artifact@v4
-        with:
-          name: tfplan
-          path: infra/tfplan
-          retention-days: 1
-
-  apply:
-    name: Terraform Apply
-    needs: plan
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::$AWS_ACCOUNT_ID:role/CustomGithubActionsRole
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        run: cd infra && terraform init
-
-      - name: Download Plan File
-        uses: actions/download-artifact@v4
-        with:
-          name: tfplan
-          path: infra
-
-      - name: Terraform Apply
-        run: cd infra && terraform apply tfplan
+          aws-region: ${{ matrix.region }}
