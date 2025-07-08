@@ -6,14 +6,10 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         region:
           - eu-central-1
-
-    steps:
-      - name: Call deploy-infra workflow for ${{ matrix.region }}
-        uses: ./.github/workflows/deploy-region.yml
-        with:
-          aws-region: ${{ matrix.region }}
+    uses: ./.github/workflows/deploy-region.yml
+    with:
+      aws-region: ${{ matrix.region }}
