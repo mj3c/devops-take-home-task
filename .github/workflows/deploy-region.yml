@@ -27,7 +27,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ inputs.aws-region }}
-          role-to-assume: arn:aws:iam::$AWS_ACCOUNT_ID:role/CustomGithubActionsRole
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/CustomGithubActionsRole
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -37,6 +37,8 @@ jobs:
 
       - name: Terraform Plan
         run: cd infra && terraform plan -var-file="terraform.${{ inputs.aws-region }}.tfvars" -out=tfplan
+        env:
+          TF_VAR_rds_mysql_password: ${{ secrets.TF_VAR_RDS_MYSQL_PASSWORD }}
 
       - name: Upload Plan File
         uses: actions/upload-artifact@v4
@@ -59,7 +61,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ inputs.aws-region }}
-          role-to-assume: arn:aws:iam::$AWS_ACCOUNT_ID:role/CustomGithubActionsRole
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/CustomGithubActionsRole
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

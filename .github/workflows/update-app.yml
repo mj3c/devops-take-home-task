@@ -27,7 +27,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::$AWS_ACCOUNT_ID:role/CustomGithubActionsRole
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/CustomGithubActionsRole
 
       - name: Read new image
         id: image

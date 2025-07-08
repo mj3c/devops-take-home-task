@@ -16,7 +16,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     env:
-      ECR_REGISTRY: $AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com
+      ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-central-1.amazonaws.com
       ECR_REPOSITORY: demo-app
     steps:
       - name: Checkout
@@ -26,7 +26,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::$AWS_ACCOUNT_ID:role/CustomGithubActionsRole
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/CustomGithubActionsRole
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
