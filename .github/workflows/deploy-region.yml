@@ -83,3 +83,5 @@ jobs:
 
       - name: Terraform Apply
         run: cd infra && terraform apply tfplan
+        env:
+          TF_VAR_rds_mysql_password: ${{ secrets.TF_VAR_RDS_MYSQL_PASSWORD }}
