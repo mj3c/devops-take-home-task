@@ -16,10 +16,11 @@ module "vpc" {
 module "ecs_cluster" {
   source = "./modules/ecs_cluster"
 
-  name          = var.env_name
-  instance_type = var.ecs_ec2_instance_type
-  vpc_id        = module.vpc.vpc_id
-  subnets       = module.vpc.private_subnets
+  name                   = var.env_name
+  instance_type          = var.ecs_ec2_instance_type
+  vpc_id                 = module.vpc.vpc_id
+  subnets                = module.vpc.private_subnets
+  allow_ingress_from_sgs = module.alb.sg_id
 }
 
 module "database" {
@@ -52,9 +53,6 @@ module "demo-app" {
   ecs_cluster_id              = module.ecs_cluster.id
   ecs_task_execution_role_arn = module.ecs_cluster.ecs_task_execution_role_arn
   lb_target_group_arn         = module.alb.target_groups[var.app_name].arn
-  subnets                     = module.vpc.private_subnets
-  vpc_id                      = module.vpc.vpc_id
-  allow_ingress_from_sgs      = [module.alb.sg_id]
 
   db_host     = module.database.rds_address
   db_name     = module.database.rds_db_name

@@ -86,7 +86,7 @@ resource "aws_lb_target_group" "this" {
     matcher             = "200,302"
   }
 
-  target_type = "ip"
+  target_type = "instance"
 
   # Setting a short deregistration delay for quicker apply/destroy for demoing.
   deregistration_delay = 10

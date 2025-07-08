@@ -3,7 +3,7 @@ data "aws_region" "current" {}
 resource "aws_ecs_task_definition" "app" {
   family             = var.name
   execution_role_arn = var.ecs_task_execution_role_arn
-  network_mode       = "awsvpc"
+  network_mode       = "bridge"
   container_definitions = jsonencode([
     {
       name      = var.name
@@ -13,7 +13,7 @@ resource "aws_ecs_task_definition" "app" {
       portMappings = [
         {
           containerPort = 80
-          hostPort      = 80
+          hostPort      = 0
           protocol      = "tcp"
         }
       ]
@@ -62,33 +62,8 @@ resource "aws_ecs_service" "app" {
     container_port   = 80
   }
 
-  network_configuration {
-    subnets         = var.subnets
-    security_groups = var.allow_ingress_from_sgs
-  }
-
   deployment_minimum_healthy_percent = 50
   deployment_maximum_percent         = 200
-}
-
-resource "aws_security_group" "app" {
-  name        = "${var.name}-ecs-service"
-  vpc_id      = var.vpc_id
-  description = "Used for the ${var.name} ECS service"
-
-  ingress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = var.allow_ingress_from_sgs
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 resource "aws_cloudwatch_log_group" "app" {

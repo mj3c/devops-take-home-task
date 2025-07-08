@@ -23,3 +23,9 @@ variable "subnets" {
   type        = list(string)
   description = "List of subnet IDs to launch instances in"
 }
+
+variable "allow_ingress_from_sgs" {
+  type        = list(string)
+  description = "List of SG IDs to allow ingress from"
+  default     = []
+}
