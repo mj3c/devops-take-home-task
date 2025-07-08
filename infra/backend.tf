@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket         = "incode-take-home-task"
     region         = "eu-central-1"
-    key            = "eu-central-1/terraform.tfstate"
+    key            = "" # Will be supplied from the command-line
     dynamodb_table = "terraform-state-lock"
     encrypt        = true
   }

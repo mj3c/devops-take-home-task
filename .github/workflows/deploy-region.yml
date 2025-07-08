@@ -39,7 +39,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: cd infra && terraform init
+        run: cd infra && terraform init -backend-config="key=${{ inputs.aws-region }}/terraform.tfstate"
 
       - name: Terraform Plan
         run: cd infra && terraform plan -var-file="terraform.${{ inputs.aws-region }}.tfvars" -out=tfplan
@@ -73,7 +73,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: cd infra && terraform init
+        run: cd infra && terraform init -backend-config="key=${{ inputs.aws-region }}/terraform.tfstate"
 
       - name: Download Plan File
         uses: actions/download-artifact@v4
