@@ -2,11 +2,6 @@
 
 name: Deploy Infrastructure (Region)
 
-# https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
-permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: read # This is required for actions/checkout
-
 on:
   workflow_call:
     inputs:
