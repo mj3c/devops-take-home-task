@@ -46,12 +46,12 @@ jobs:
           IMAGE="${{ steps.image.outputs.image }}"
           NEW_TASK_DEF=$(cat taskdef.json | jq --arg IMAGE "$IMAGE" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) |  del(.registeredAt)  | del(.registeredBy)')
           NEW_TASK_REGISTER_RESPONSE=$(aws ecs register-task-definition --cli-input-json "$NEW_TASK_DEF")
-          NEW_REVISION=$(echo $NEW_TASK_REGISTER_RESPONSE | jq '.taskDefinition.revision')
-          echo "taskdef_revision=$NEW_REVISION" >> $GITHUB_OUTPUT
+          NEW_TASK_DEF_ARN=$(echo $NEW_TASK_REGISTER_RESPONSE | jq '.taskDefinition.taskDefinitionArn')
+          echo "taskdef_arn=$NEW_TASK_DEF_ARN" >> $GITHUB_OUTPUT
 
-      - name: Update ECS service to use new task dev revision
+      - name: Update ECS service to use new task def revision
         run: |
           aws ecs update-service \
             --cluster $CLUSTER_NAME \
             --service $SERVICE_NAME \
-            --task-definition ${{ steps.newtask.outputs.taskdef_revision }}
+            --task-definition ${{ steps.newtask.outputs.taskdef_arn }}
