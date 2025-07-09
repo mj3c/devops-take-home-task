@@ -50,7 +50,7 @@ A few notes I collected as I worked on this.
     1. The ECR repository (could also be done inside `infra/modules/demo-app`, but usually we want a single ECR repository even if deploying to multiple regions)
     1. The IAM role to allow GitHub Actions to create AWS resources, push to ECR and update ECS services.
 
-1. In a real-world scenario, I would separate this work in a few repositories, meaning the `./demo-app`, terraform modules inside `./infra/modules`, the actual terraform infra config inside `./infra`, and the app version to deploy inside `./live` could all be in separate repos. This would allow for separating access control, tagging/versioning, etc... depending on requirements.
+1. In a real-world scenario, I would most likely separate this work in a few repositories, meaning the `./demo-app`, terraform modules inside `./infra/modules`, the actual terraform infra config inside `./infra`, and the app version to deploy inside `./live` could all be in separate repos. This would allow for separating access control, tagging/versioning, etc... depending on requirements.
 
 1. I used a combination of publically available modules (like the VPC module) and custom-built modules (like `./infra/modules/ecs_cluster`) to demonstrate use of both.
 
