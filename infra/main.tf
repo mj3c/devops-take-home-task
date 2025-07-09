@@ -20,7 +20,7 @@ module "ecs_cluster" {
   instance_type          = var.ecs_ec2_instance_type
   vpc_id                 = module.vpc.vpc_id
   subnets                = module.vpc.private_subnets
-  allow_ingress_from_sgs = module.alb.sg_id
+  allow_ingress_from_sgs = [module.alb.sg_id]
 }
 
 module "database" {
@@ -34,7 +34,7 @@ module "database" {
   password               = var.rds_mysql_password
   vpc_id                 = module.vpc.vpc_id
   subnet_group_name      = module.vpc.database_subnet_group_name
-  allow_ingress_from_sgs = [module.demo-app.sg_id, module.alb.sg_id]
+  allow_ingress_from_sgs = [module.ecs_cluster.sg_id]
 }
 
 module "alb" {

@@ -20,6 +20,15 @@ resource "aws_security_group" "ecs_instance" {
     security_groups = var.allow_ingress_from_sgs
   }
 
+  # This is the dynamic port range that ECS uses in bridge networking mode,
+  # we need to allow ingress to it so ALB target group health checks would pass
+  ingress {
+    from_port       = 32768
+    to_port         = 60999
+    protocol        = "tcp"
+    security_groups = var.allow_ingress_from_sgs
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
