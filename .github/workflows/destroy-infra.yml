@@ -37,6 +37,6 @@ jobs:
         run: cd infra && terraform init -backend-config="key=${{ inputs.aws-region }}/terraform.tfstate"
 
       - name: Terraform Destroy
-        run: cd infra && terraform destroy -var-file="terraform.${{ inputs.aws-region }}.tfvars"
+        run: cd infra && terraform destroy -var-file="terraform.${{ inputs.aws-region }}.tfvars" -auto-approve
         env:
           TF_VAR_rds_mysql_password: ${{ secrets.TF_VAR_RDS_MYSQL_PASSWORD }}
