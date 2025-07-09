@@ -46,7 +46,7 @@ module "alb" {
   targets = var.alb_targets
 }
 
-module "demo-app" {
+module "demo_app" {
   source = "./modules/app"
 
   name                        = var.app_name
