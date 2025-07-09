@@ -5,3 +5,7 @@ output "target_groups" {
 output "sg_id" {
   value = aws_security_group.alb.id
 }
+
+output "alb_dns_name" {
+  value = aws_lb.main.dns_name
+}

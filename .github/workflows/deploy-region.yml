@@ -85,3 +85,19 @@ jobs:
         run: cd infra && terraform apply tfplan
         env:
           TF_VAR_rds_mysql_password: ${{ secrets.TF_VAR_RDS_MYSQL_PASSWORD }}
+
+      - name: Get ALB's DNS name
+        id: get_alb_dns
+        run: |
+          cd infra
+          ALB_DNS=$(terraform output -raw app_url)
+          echo "alb_dns=$ALB_DNS" >> $GITHUB_OUTPUT
+
+      - name: Upload ALB's DNS name as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-url
+          path: |
+            <<<EOF
+            ${{ steps.get_alb_dns.outputs.alb_dns }}
+            EOF
