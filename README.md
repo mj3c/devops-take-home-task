@@ -1,4 +1,4 @@
-# Incode take-home task
+# DevOps take-home task
 
 ## Directory structure
 
