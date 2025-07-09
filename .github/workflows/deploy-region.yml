@@ -91,13 +91,11 @@ jobs:
         run: |
           cd infra
           ALB_DNS=$(terraform output -raw app_url)
-          echo "alb_dns=$ALB_DNS" >> $GITHUB_OUTPUT
+          echo "$ALB_DNS" > app_url
 
       - name: Upload ALB's DNS name as artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-url
-          path: |
-            <<<EOF
-            ${{ steps.get_alb_dns.outputs.alb_dns }}
-            EOF
+          path: infra/app_url
+          retention-days: 1
