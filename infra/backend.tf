@@ -3,7 +3,7 @@ terraform {
     bucket         = "incode-take-home-task"
     region         = "eu-central-1"
     key            = "" # Will be supplied from the command-line
-    dynamodb_table = "terraform-state-lock"
+    use_lockfile   = true
     encrypt        = true
   }
 }
