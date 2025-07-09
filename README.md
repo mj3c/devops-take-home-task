@@ -4,6 +4,13 @@
 
 ```
 .
+├── .github
+│   └── workflows                      -- Workflows to create/destroy infra, build and deploy app
+│       ├── build-and-push.yml
+│       ├── deploy-infra.yml
+│       ├── deploy-region.yml
+│       ├── destroy-infra.yml
+│       └── update-app.yml
 ├── demo-app                           -- The app to deploy
 │   ├── Dockerfile
 │   └── file.txt
