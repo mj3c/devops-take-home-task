@@ -1,0 +1,42 @@
+# This is a reusable workflow
+
+name: Destroy Infrastructure (Region)
+
+# https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+on:
+  # Allow triggering manually for easier testing
+  workflow_dispatch:
+    inputs:
+      aws-region:
+        required: true
+        type: string
+
+jobs:
+  plan:
+    name: Terraform Destroy (${{ inputs.aws-region }})
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ inputs.aws-region }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/CustomGithubActionsRole
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: cd infra && terraform init -backend-config="key=${{ inputs.aws-region }}/terraform.tfstate"
+
+      - name: Terraform Destroy
+        run: cd infra && terraform destroy -var-file="terraform.${{ inputs.aws-region }}.tfvars"
+        env:
+          TF_VAR_rds_mysql_password: ${{ secrets.TF_VAR_RDS_MYSQL_PASSWORD }}
